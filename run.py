@@ -1,7 +1,7 @@
 '''
 Initialization Module
 
-This module allows you to run the program by directly executing the package
+This module allows you to run the program by directly executing the package.
 '''
 
 # Modules
