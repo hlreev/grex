@@ -22,7 +22,7 @@ def create_start_window():
     """
 
     root = tk.Tk()
-    root.title("G-Rex: Main Window")
+    root.title("GRex: Main Window")
     
     # Get screen width and height
     screen_width = root.winfo_screenwidth()
@@ -52,7 +52,7 @@ def create_start_window():
 
 def add_spash_image(root):
     """
-    Adds the G-Rex mascot to the main GUI window at the start!
+    Adds the GRex mascot to the main GUI window at the start!
 
     Args:
         root (tk.Tk): The main GUI window.

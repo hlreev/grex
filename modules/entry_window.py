@@ -42,7 +42,7 @@ def create_entry_window(root, element_color):
 
     # Build the entry window
     entry_window = tk.Toplevel(root)
-    entry_window.title("G-Rex: Entry Window")
+    entry_window.title("GRex: Entry Window")
 
     # Get screen width and height
     screen_width = root.winfo_screenwidth()

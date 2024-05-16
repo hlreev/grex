@@ -26,16 +26,16 @@ def GUI(data):
         data (dict): A dictionary containing all of the information in the JSON file.
     """
 
-    # Start G-Rex!
+    # Start GRex!
     try:
         start_gui(data)
     except Exception as error:
-        debug(f"G-Rex could not be launched! Code: {error}", "ERROR")
+        debug(f"GRex could not be launched! Code: {error}", "ERROR")
         return
 
 def main():
     """
-    Starting point for G-Rex!
+    Starting point for GRex!
     """
 
     # Read in all the data associated with the initial conditions and the decision trees

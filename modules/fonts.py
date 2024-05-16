@@ -1,7 +1,7 @@
 '''
 Fonts Module
 
-This module provides data for font information used in G-Rex.
+This module provides data for font information used in GRex.
 '''
 
 # Define a custom fonts
