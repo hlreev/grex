@@ -4,4 +4,5 @@ All versions of GRex will be documented here, along with the changelog and bug f
 ## Version 0.1.0-pre (Date Finished - 05/14/2024)
 - Started project with original codebase from previous work
 - Published repo to Github for collaboration purposes
+- Created a feature branch for working away from master
 - Minor tweaks and changes
