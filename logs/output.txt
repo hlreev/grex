@@ -10,3 +10,4 @@
 [2024-03-18 20:02:46] | Match Found: 'F' | User entry info: {'hazard': 'heavy rain', 'selected_days': [0], 'peak_day': 0, 'confidence': 10, 'uncertainty': 'synoptic'}
 [2024-03-18 20:05:08] | Match Found: 'T' | User entry info: {'hazard': 'heavy rain', 'selected_days': [0, 1, 2, 3], 'peak_day': 0, 'confidence': 50, 'uncertainty': 'synoptic'}
 [2024-03-18 20:05:39] | Match Found: 'T' | User entry info: {'hazard': 'heavy rain', 'selected_days': [5, 6, 7], 'peak_day': 5, 'confidence': 30, 'uncertainty': 'synoptic'}
+[2024-05-15 20:23:18] | Match Found: 'T' | User entry info: {'hazard': 'heavy rain', 'selected_days': [3, 4, 5, 6], 'peak_day': 4, 'confidence': 40, 'uncertainty': 'synoptic'}

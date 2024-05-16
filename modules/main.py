@@ -1,5 +1,5 @@
 '''
-Main Module | G-Rex: Graphicast Recommender
+Main Module | GRex: Graphicast Recommender
 
 This module guides the user through the process of selecting parameters for a Graphicast recommendation based on initial conditions and questions.
 '''
