@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      font-size: 16px;
+      color: #666;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    hr {
+      border: 0;
+      height: 1px;
+      background: #ccc;
+      margin: 20px 0;
+    }
+    .question-container {
+      margin-bottom: 20px;
+    }
+    .button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+  <script>
+    // Get the ID for the first question in the relevant decision tree
+    var currentQuestionId = 0; // Hard coding the ID of the first question is definitely not best practice... need to change this.
+
+    // Function to get a question by its ID
+    function getQuestionById(id) {
+      return questions.find(q => q.id === id);
+    }
+
+    // Displays each question as they are asked in order of the decision tree selected
+    function displayQuestion(question) {
+      var questionsContainer = document.getElementById('questions-container');
+      questionsContainer.innerHTML = `<p>${question.question}</p>`;
+    }
+    
+    // Handles all interactions with the "Yes" and "No" buttons
+    function handleButtonClick(value) {
+      // Get the ID for the next question
+      var nextQuestionId = currentQuestion[value];
+
+      if (typeof nextQuestionId === 'string') {
+        alert(nextQuestionId);
+        google.script.host.close();
+      } 
+      else {
+        currentQuestionId = nextQuestionId;
+        currentQuestion = getQuestionById(currentQuestionId);
+        displayQuestion(currentQuestion);
+      }
+    }
+
+    // Display the questions related to the decision tree whose initial conditions match the user submitted form data
+    window.onload = function() {
+      // For debugging
+      console.log("Loaded Questions:", questions); 
+      
+      // Load the questions onto the page by their ID
+      currentQuestion = getQuestionById(currentQuestionId);
+      displayQuestion(currentQuestion);
+    };
+  </script>
+</head>
+<body>
+  <h1>Query Page</h1>
+  <hr>
+  <div id="questions-container">
+    <label for="question">Question:</label>
+    <p>Not yet implemented.</p>
+  </div>
+  <hr>  
+  <div class="button-container">
+    <input type="button" value="Yes" class="button" onclick="handleButtonClick('yes')" />
+    <input type="button" value="No" class="button" onclick="handleButtonClick('no')" />
+  </div>
+</body>
+</html>
