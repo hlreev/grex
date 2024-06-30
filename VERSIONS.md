@@ -5,6 +5,7 @@ All versions of GRex will be documented here, along with the changelog and bug f
 - Moved project over to be hosted on Google via API Scripting
 - Up to date on functionality and now works through decision trees
 - Added files related to the web dev version on Google in a new folder
+- Added new JSON file with better structure for the project
 - Minor tweaks and changes
 
 ## Version 0.1.0-pre (Date Finished - 05/14/2024)
