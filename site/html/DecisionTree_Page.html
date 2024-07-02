@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
+<!-- Header Section -->
 <head>
+  <!-- CSS Style Section -->
   <style>
+    /* Main Element Styles */
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
@@ -17,9 +20,6 @@
       font-size: 16px;
       color: #666;
     }
-    .form-group {
-      margin-bottom: 15px;
-    }
     label {
       display: block;
       font-weight: bold;
@@ -31,9 +31,16 @@
       background: #ccc;
       margin: 20px 0;
     }
+
+    /* Group Styles */
+    .form-group {
+      margin-bottom: 15px;
+    }
     .question-container {
       margin-bottom: 20px;
     }
+
+    /* Button Styles */
     .button {
       background-color: #4CAF50;
       color: white;
@@ -57,29 +64,52 @@
       margin-top: 20px;
     }
   </style>
+  <!-- Embedded Javascript Section -->
   <script>
     // Get the ID for the first question in the relevant decision tree
     var currentQuestionId = 0; // Hard coding the ID of the first question is definitely not best practice... need to change this.
 
-    // Function to get a question by its ID
+    /**
+     ** Gets any question by its ID, specified in the JSON data that is loaded in.
+     **/
     function getQuestionById(id) {
-      return questions.find(q => q.id === id);
+      const question = questions.find(q => q.id === id);
+
+      // Debug for when a question is not found
+      if (!question) {
+        google.script.run.debugLog('A question was not found. Something went horribly wrong!', severity = 'ERROR')
+
+        return null;
+      }
+
+      return question;
     }
 
-    // Displays each question as they are asked in order of the decision tree selected
+    /**
+     ** Displays each question as they are asked in order of the decision tree selected.
+     **/
     function displayQuestion(question) {
       var questionsContainer = document.getElementById('questions-container');
+
       questionsContainer.innerHTML = `<p>${question.question}</p>`;
     }
     
-    // Handles all interactions with the "Yes" and "No" buttons
+    /**
+     ** Handles all interactions with the "Yes" and "No" buttons.
+     **/
     function handleButtonClick(value) {
       // Get the ID for the next question
       var nextQuestionId = currentQuestion[value];
 
       if (typeof nextQuestionId === 'string') {
-        alert(nextQuestionId);
-        google.script.host.close();
+        // Call the server-side function to copy the slide
+        google.script.run.withSuccessHandler(function() {
+          // Tell the user what the recommendation is (this will be used to pull in the graphicast)
+          alert(nextQuestionId)
+          // Debug
+          console.log(nextQuestionId)
+          google.script.host.close(); 
+        }).copyRecommendedGraphicast();
       } 
       else {
         currentQuestionId = nextQuestionId;
@@ -88,7 +118,9 @@
       }
     }
 
-    // Display the questions related to the decision tree whose initial conditions match the user submitted form data
+    /**
+     ** Display the questions related to the decision tree according to the match, data passed in by the entry page form submission.
+     **/
     window.onload = function() {
       // For debugging
       console.log("Loaded Questions:", questions); 
@@ -99,12 +131,13 @@
     };
   </script>
 </head>
+<!-- Query Page Section -->
 <body>
   <h1>Query Page</h1>
   <hr>
   <div id="questions-container">
     <label for="question">Question:</label>
-    <p>Not yet implemented.</p>
+    <p>If you see this text, something went wrong.</p>
   </div>
   <hr>  
   <div class="button-container">

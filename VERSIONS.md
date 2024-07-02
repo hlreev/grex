@@ -1,6 +1,12 @@
 # GRex Patches and Updates
 All versions of GRex will be documented here, along with the changelog and bug fixes
 
+## Version 0.6.0-pre (Date Finished - 07/02/2024)
+- Added some logging capabilities for runtime debugging for the project
+- Added some additional comments
+- Adjusted some of the code based on recent testing to make sure things are behaving
+- Minor tweaks and changes
+
 ## Version 0.5.0-pre (Date Finished - 06/30/2024)
 - Moved project over to be hosted on Google via API Scripting
 - Up to date on functionality and now works through decision trees

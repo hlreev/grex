@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
+<!-- Header Section -->
 <head>
+  <!-- CSS Style Section -->
   <style>
+    /* Main Element Styles */
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
@@ -16,9 +19,6 @@
     p {
       font-size: 16px;
       color: #666;
-    }
-    .form-group {
-      margin-bottom: 15px;
     }
     label {
       display: block;
@@ -37,6 +37,17 @@
       background: #ccc;
       margin: 20px 0;
     }
+
+    /* Group Styles */
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .checkbox-option {
+      text-align: center;
+      width: 100%;
+    }
+
+    /* Button Styles */
     .button-container {
       text-align: center;
       margin-top: 20px;
@@ -55,17 +66,15 @@
     .button:hover {
       background-color: #45a049;
     }
-    .checkbox-option {
-      text-align: center;
-      width: 100%;
-    }
   </style>
-</head>
+  <!-- Embedded Javascript Section -->
   <script>
     // Clear the console
     console.clear();
 
-    // Function to update peak day options based on selected days
+    /**
+     ** Update the options for the peak day dropdown based on the selected days in the previous form group.
+     **/
     function updatePeakDayOptions() {
       var selectedDays = document.querySelectorAll('input[name="selected-days"]:checked');
       var peakDaySelect = document.getElementById('peak-day');
@@ -85,7 +94,9 @@
       });
     }
     
-    // Function to submit form information that contains initial conditions to compare against in the database
+    /**
+     ** Packages the form data to then be passed on to the query page and process it against initial conditions in the database.
+     **/
     function submitForm() {
       var hazard = document.getElementById('weather-hazard').value;
       var selectedDays = Array.from(document.querySelectorAll('input[name="selected-days"]:checked')).map(checkbox => checkbox.value);
@@ -106,22 +117,29 @@
         uncertainty: uncertainty
       };
 
+      /**
+       ** Determines if a match was found or not, handles the hand-off of data to then be displayed in the query page once loaded.
+       **/
       google.script.run.withSuccessHandler(function(response) {
         // Show an alert based on the server response
         if (response.matchFound) {
-          // For debugging
-          console.log("INFO: A match was found!")
+          // For debug logging
+          google.script.run.debugLog("Successful run! These initial conditions have a match in the decision tree database.", severity = "INFO")
+          google.script.run.entryLog(formData, response.matchFound)
 
-          alert("A match for these initial conditions has been found. Now loading the relevant decision tree...");
-  
+          // User alert that sends across the network
+          alert("A match was found! The decision tree is now loading...");
+
           // Load the new page in the sidebar with the questions
           google.script.run.showDecisionTree(response.questions);
         } 
         else {
-          // For debugging
-          console.log("INFO: A match was not found.")
+          // For debug logging
+          google.script.run.debugLog("A match was not found. Do these initial conditions need to be considered?", severity = "WARNING")
+          google.script.run.entryLog(formData, response.matchFound)
 
-          alert("A match was not found in the current database. A probabilistic graphicast is not recommended for this scenario. This window will now close...");
+          // User alert that sends across the network
+          alert("A probabilistic graphicast is not recommended for this scenario.");
           
           // Close the existing sidebar that has the entry page form loaded
           google.script.host.close();
@@ -132,6 +150,8 @@
       console.log(formData);
     }
   </script>
+</head>
+<!-- Entry Page Section -->
 <body>
   <h1>Entry Page</h1>
   <hr>
