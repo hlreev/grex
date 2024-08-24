@@ -1,76 +1,91 @@
 {
-	"trees": [
+	"trees": 
+	[
 	  {
-		"initial_conditions": {
+		"initial_conditions": 
+		{
 		  "hazard": "heavy-rain",
 		  "day_min": 5,
 		  "day_max": 7,
 		  "conf_min": 0.1,
-		  "conf_max": 0.3,
-		  "uncertainty": "synoptic"
+		  "conf_max": 0.3
 		},
-		"questions": [
+		"question_sets": 
+		[
 		  {
 			"id": 0,
 			"question": "Are the high end amounts similar in the majority of forecast scenarios?",
 			"yes": 1,
-			"no": "A probabilistic graphicast is not recommended for this forecast scenario."
+			"no": 2
 		  },
 		  {
 			"id": 1,
 			"question": "Is the areal placement of the highest rainfall amounts in a similar area in the majority of forecast scenarios?",
-			"yes": 2,
-			"no": "Message low track differences with broad (most likely) accumulation ranges mentioned."
+			"yes": ["Most Likely + Middle 50th Range Boxes", "Most Likely + Middle 80th Range Boxes"],
+			"no": ["Alternate Scenarios"]
 		  },
 		  {
 			"id": 2,
-			"question": "Is the event 6+ days out?",
-			"yes": "Message low track differences with 1-3 range box forecasts using middle 80th.",
-			"no": "Message low track differences with 1-3 range box forecasts using middle 50th."
+			"question": "Is the areal placement of the highest rainfall amounts in a similar area in the majority of forecast scenarios?",
+			"yes": ["Most Likely + Worded Scenario"],
+			"no": 3
+		  },
+		  {
+			"id": 3,
+			"question": "Is there location or track of the low system clearly defined and can help add context to the forecast (why the uncertainty is so high)?",
+			"yes": ["System Tracks + Optional Worded Middle 50th/80th Intervals"],
+			"no": ["Most Likely Only"]
 		  }
 		]
 	  },
 	  {
-		"initial_conditions": {
+		"initial_conditions": 
+		{
 		  "hazard": "heavy-rain",
 		  "day_min": 1,
 		  "day_max": 4,
 		  "conf_min": 0.3,
-		  "conf_max": 0.9,
-		  "uncertainty": "synoptic"
+		  "conf_max": 0.9
 		},
-		"questions": [
+		"question_sets": 
+		[
 		  {
 			"id": 0,
-			"question": "Is there a reasonable threat for flooding (slight ERO or greater)?",
+			"question": "Is there a reasonable threat for flooding? (slight ERO or greater)?",
 			"yes": 1,
-			"no": 4
+			"no": 5
 		  },
 		  {
 			"id": 1,
-			"question": "Are you confident in the 90th Percentile occurring?",
+			"question": "Are you confident in the 90th Percentile occurring somewhere in the forecast area?",
 			"yes": 2,
-			"no": 3
+			"no": 4
 		  },
 		  {
 			"id": 2,
-			"question": "Is the event within 48 hours AND is there enough consistency among the CAMs to highlight one area of the CWA with a greater potential of receiving the 90th?",
-			"yes": "Message mapped most likely values with an outline of the 90th Percentile.",
-			"no": "Message most likely with a mentioned 90th percentile OR Use a probability of exceedance with a threshold that has less than a 50% chance of occurring."
+			"question": "Does a map of the 90th Percentile (either from NBM, WPC, or HREF) have the appropriate placement, spatial alignment, and amounts for the entire forecast area?",
+			"yes": ["Most Likely + Mapped 90th"],
+			"no": 3
 		  },
 		  {
 			"id": 3,
-			"question": "Is the event <2 days out?",
-			"yes": "Use a timing topo map with outlined area of greatest flood threat from FFG & mentioned most likely.",
-			"no": "Message probability of exceedance with a value near the standard FFG threshold."
+			"question": "Is the event within 48 hours AND is there enough consistency among the CAMs to highlight one area of the CWA with a greater potential of receiving the 90th?",
+			"yes": ["Most Likely + Outlined 90th + Timing Bars", "Most Likely + Outlined 90th + Broad Timing"],
+			"no": ["Most Likely + Mapped Prob Exceedance", "Most Likely + Mentioned 90th + Timing Bars", "Most Likely + Mentioned 90th + Broad Timing"]
 		  },
 		  {
 			"id": 4,
+			"question": "Is the event <2 days out?",
+			"yes": ["Most Likely + Mentioned Exceedance + Timing Bars", "Most Likely + Mentioned Exceedance + Outlined Threat Area + Broad Timing"],
+			"no": ["Most Likely + Mapped Exceedance", "Most Likely + Timing Bars + Outlined Threat Area", "Most Likely + Broad Timing + Outlined Threat Area"]
+		  },
+		  {
+			"id": 5,
 			"question": "Are low amounts of rainfall important in the area (ongoing drought, dry spell, fire weather, etc)?",
-			"yes": "Message most likely and at least 10th/25th percentile.",
-			"no": "Message the most likely scenario. No need for a probabilistic graphicast."
+			"yes": ["Most Likely + Mapped 10th"],
+			"no": ["Most Likely + Broad Timing", "Most Likely + PoP Timing Bars"]
 		  }
 		]
 	  }
 	]
-}  
+  }

@@ -11,7 +11,7 @@ function processInitialConditions(formData) {
   
   // Check for a match through each decision tree in the loaded data
   if (matchIndex !== NO_MATCH) {
-    const questions = data.trees[matchIndex].questions;
+    const questions = data.trees[matchIndex].question_sets;
     
     return { matchFound: true, questions };
   }
@@ -31,49 +31,60 @@ function loadDecisionTreeData() {
 }
 
 /**
- ** Attemps to find a match based on initial conditions after checking against the loaded data via JSON file.
+ ** Attempts to find a match based on initial conditions after checking against the loaded data via JSON file.
  **/
-function findMatch(initialConditions, { hazard, peak_day, confidence, uncertainty }) {
+function findMatch(initialConditions, { hazard, peak_day, confidence }) {
   peak_day = parseInt(peak_day);
 
   return initialConditions.findIndex(condition => 
     condition.hazard === hazard &&
     condition.day_min <= peak_day && peak_day <= condition.day_max &&
-    condition.conf_min <= confidence && confidence <= condition.conf_max &&
-    condition.uncertainty === uncertainty
+    condition.conf_min <= confidence && confidence <= condition.conf_max
   );
 }
 
 /**
- ** TODO: Copies the recommended graphicast determined by the matched decision tree to the current slide for the forecaster to use.
+ ** Finds the matching slide based on a specific presentation ID and the speaker notes text on the slide
  **/
-function copyRecommendedGraphicast() {
-  var presentation = SlidesApp.getActivePresentation();
-  var selection = presentation.getSelection();
-  var currentPage = selection.getCurrentPage();
-
-  // Check if a slide is selected
-  if (currentPage && currentPage.getPageType() === SlidesApp.PageType.SLIDE) {
-    var currentSlide = currentPage.asSlide();
-
-    // Get the ID of the current slide
-    var slideId = currentSlide.getObjectId();
-
-    // Get the index of the current slide
-    var slides = presentation.getSlides();
-    var currentIndex = slides.findIndex(slide => slide.getObjectId() === slideId);
-
-    // Duplicate the current slide
-    var newSlide = currentSlide.duplicate();
-
-    // Move the new slide to the position right after the current slide
-    newSlide.move(currentIndex + 1);
+function getSlideBySpeakerNote(presentationId, noteText) {
+  var presentation = SlidesApp.openById(presentationId);
+  var slides = presentation.getSlides();
+  
+  // Loop through slides to find the one with the matching note
+  for (var i = 0; i < slides.length; i++) {
+    var slide = slides[i];
+    var notes = slide.getNotesPage().getSpeakerNotesShape().getText().asString();
     
-    // Message when copy was successful
-    google.script.run.debugLog('Recommended graphicast has been successfully added.');
-  } 
-  else {
-    // Message when copy was not successful
-    google.script.run.debugLog('No slide is currently selected.', severity = 'WARNING');
+    if (notes.includes(noteText)) {
+      
+      return slide;
+    }
   }
+  
+  google.script.run.debugLog("The slide with the following speaker note was not found: " + noteText, "ERROR")
+  throw new Error("Slide with the note '" + noteText + "' not found.");
+}
+
+/**
+ ** Copies the recommended graphicast determined by the matched decision tree to the current slide for the forecaster to use
+ **/
+function copyRecommendedGraphicast(decisionText, GRAPHICAST_MAP) {
+  // Obtain the graphicast to be copied into the new presentation
+  var graphicInfo = GRAPHICAST_MAP[decisionText];
+  
+  // Prepare the presentation for the slide copying
+  var currentPresentation = SlidesApp.getActivePresentation();
+  
+  // Get the slide by its note text
+  var sourceSlide = getSlideBySpeakerNote(graphicInfo.presentationId, decisionText);
+  var duplicatedSlide = sourceSlide.duplicate();
+  
+  // Append the duplicated slide to the current presentation
+  var newSlide = currentPresentation.appendSlide(duplicatedSlide);
+  
+  // Move the new slide to the end of the presentation
+  newSlide.move(currentPresentation.getSlides().length - 1);
+  
+  // Remove the duplicated slide from the source presentation
+  duplicatedSlide.remove();
 }

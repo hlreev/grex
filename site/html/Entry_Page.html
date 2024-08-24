@@ -66,10 +66,19 @@
     .button:hover {
       background-color: #45a049;
     }
+
+    /* Loading Style */
+    .loading {
+      display: none;
+      text-align: center;
+      font-size: 18px;
+      color: #333;
+      margin-top: 20px;
+    }
   </style>
   <!-- Embedded Javascript Section -->
   <script>
-    // Clear the console
+    // Clear the console after each run just to clean it up a bit beforehand
     console.clear();
 
     /**
@@ -98,23 +107,25 @@
      ** Packages the form data to then be passed on to the query page and process it against initial conditions in the database.
      **/
     function submitForm() {
+      // Get data from entry page regarding each data form
       var hazard = document.getElementById('weather-hazard').value;
       var selectedDays = Array.from(document.querySelectorAll('input[name="selected-days"]:checked')).map(checkbox => checkbox.value);
       var peakDay = document.getElementById('peak-day').value;
       var confidence = parseFloat(document.getElementById('forecast-confidence').value);
-      var uncertainty = document.getElementById('uncertainty').value;
 
-      if (!hazard || selectedDays.length === 0 || !peakDay || !confidence || !uncertainty) {
-        alert("WARNING: Please fill out all fields before submitting.");
+      // Prevent the user from continuing until all forms are filled out
+      if (!hazard || selectedDays.length === 0 || !peakDay || !confidence) {
+        alert("ERROR: Please fill out all fields before submitting.");
+
         return false;
       }
-
+      
+      // Package the data neatly...
       var formData = {
         hazard: hazard,
         selected_days: selectedDays,
         peak_day: peakDay,
-        confidence: confidence,
-        uncertainty: uncertainty
+        confidence: confidence
       };
 
       /**
@@ -123,30 +134,26 @@
       google.script.run.withSuccessHandler(function(response) {
         // Show an alert based on the server response
         if (response.matchFound) {
-          // For debug logging
-          google.script.run.debugLog("Successful run! These initial conditions have a match in the decision tree database.", severity = "INFO")
+          google.script.run.debugLog("These initial conditions have a match in the decision tree database.", severity = "INFO")
           google.script.run.entryLog(formData, response.matchFound)
 
-          // User alert that sends across the network
-          alert("A match was found! The decision tree is now loading...");
+          // Show loading indicator
+          document.getElementById('loading').style.display = 'block';
 
           // Load the new page in the sidebar with the questions
           google.script.run.showDecisionTree(response.questions);
         } 
         else {
-          // For debug logging
           google.script.run.debugLog("A match was not found. Do these initial conditions need to be considered?", severity = "WARNING")
           google.script.run.entryLog(formData, response.matchFound)
 
-          // User alert that sends across the network
-          alert("A probabilistic graphicast is not recommended for this scenario.");
+          alert("A probabilistic graphicast is not recommended for the conditions submitted.");
           
-          // Close the existing sidebar that has the entry page form loaded
           google.script.host.close();
         }
       }).processInitialConditions(formData);
 
-      // For debugging
+      // To see form data in the console for debugging purposes
       console.log(formData);
     }
   </script>
@@ -203,18 +210,9 @@
     </select>
   </div>
   <hr>
-  <div class="form-group">
-    <label for="uncertainty">Uncertainty:</label>
-    <p>Is your uncertainty more synoptic (i.e. will all the ingredients align) or areal (i.e., ingredients should align, but unsure where)?</p>
-    <select id="uncertainty" name="uncertainty" required>
-      <option value="" disabled selected>Select uncertainty</option>
-      <option value="synoptic">Synoptic</option>
-      <option value="areal">Areal</option>
-    </select>
-  </div>
-  <hr>
   <div class="button-container">
     <input type="button" value="Submit" class="button" onclick="submitForm()" />
   </div>
+  <div id="loading" class="loading">Loading, please wait...</div>
 </body>
 </html>

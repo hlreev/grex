@@ -1,15 +1,13 @@
-[2023-11-24 07:53:57] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-01-13 14:52:12] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-01-13 14:52:32] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-01-13 14:52:53] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-01-13 14:53:10] [WARNING] A match was not found. Do these initial conditions need to be considered?
-[2024-01-13 14:55:08] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-02-17 22:36:25] [WARNING] A match was not found. Do these initial conditions need to be considered?
-[2024-02-17 22:36:48] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-03-18 19:58:05] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-03-18 20:02:46] [WARNING] A match was not found. Do these initial conditions need to be considered?
-[2024-03-18 20:05:08] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-03-18 20:05:39] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-05-15 20:23:18] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-05-15 22:48:23] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
-[2024-05-29 12:52:31] [INFO] Successful run! Your initial conditions have a match in the decision tree database.
+
+[2024-08-24 16:34:57] [INFO] These initial conditions have a match in the decision tree database.
+[2024-08-24 16:35:06] [SUCCESS] Graphicast(s) found and copied for this scenario.
+[2024-08-24 16:35:25] [INFO] These initial conditions have a match in the decision tree database.
+[2024-08-24 16:35:35] [SUCCESS] Graphicast(s) found and copied for this scenario.
+[2024-08-24 16:36:06] [INFO] These initial conditions have a match in the decision tree database.
+[2024-08-24 16:36:18] [SUCCESS] Graphicast(s) found and copied for this scenario.
+[2024-08-24 16:36:56] [INFO] These initial conditions have a match in the decision tree database.
+[2024-08-24 16:37:09] [SUCCESS] Graphicast(s) found and copied for this scenario.
+[2024-08-24 16:37:31] [INFO] These initial conditions have a match in the decision tree database.
+[2024-08-24 16:39:04] [WARNING] A match was not found. Do these initial conditions need to be considered?
+[2024-08-24 16:39:14] [INFO] These initial conditions have a match in the decision tree database.
+[2024-08-24 16:39:20] [ERROR] No graphicasts were found! Has the source presentation been moved?

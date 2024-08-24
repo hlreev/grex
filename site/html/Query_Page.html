@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<!-- Header Section -->
+<head>
+  <!-- CSS Style Section -->
+  <style>
+    /* Main Element Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      font-size: 16px;
+      color: #666;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    hr {
+      border: 0;
+      height: 1px;
+      background: #ccc;
+      margin: 20px 0;
+    }
+
+    /* Group Styles */
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .question-container {
+      margin-bottom: 20px;
+    }
+
+    /* Button Styles */
+    .button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    /* Loading Style */
+    .loading {
+      display: none;
+      text-align: center;
+      font-size: 18px;
+      color: #333;
+      margin-top: 20px;
+    }
+  </style>
+  <!-- Embedded Javascript Section -->
+  <script>
+    // Default the first question ID to 0 (baseline for decision tree)
+    var currentQuestionId = 0;
+
+    // WARNING: This needs to be updated if the templates are moved or if using a different google slides presentation, maps to the specific presentation where graphicasts will be pulled from.
+    var PRESENTATION_ID = '1vJZfOxFU9O79xe0r1hq-gWwPQEKfy7WFM54HPY4iUlo';
+
+    // Maps decision tree logic to each specific graphicast found in the presentation to be used when a matching scenario is found, based on text found in speakers notes for each slide.
+    var GRAPHICAST_MAP = {
+      "Most Likely + Middle 50th Range Boxes": { presentationId: PRESENTATION_ID },
+      "Most Likely + Middle 80th Range Boxes": { presentationId: PRESENTATION_ID },
+      'Alternate Scenarios': { presentationId: PRESENTATION_ID },
+      "Most Likely + Worded Scenario": { presentationId: PRESENTATION_ID },
+      "System Tracks + Optional Worded Middle 50th/80th Intervals": { presentationId: PRESENTATION_ID },
+      "Most Likely Only": { presentationId: PRESENTATION_ID }
+    };
+
+    /**
+     ** Gets any question by its ID, specified by the JSON data that is loaded in.
+     **/
+    function getQuestionById(id) {
+      // Get the question based on the current question ID
+      const question = questions.find(q => q.id === id);
+
+      // Check for when the question is not found, logs an error for debugging purposes
+      if (!question) {
+        google.script.run.debugLog('A question was not found in the database. Something went wrong!', severity = 'ERROR')
+
+        return null;
+      }
+
+      return question;
+    }
+
+    /**
+     ** Displays each question as they are asked in order of the decision tree selected.
+     **/
+    function displayQuestion(question) {
+      // Access the container on the Query Page where the questions will be placed when found
+      var questionsContainer = document.getElementById('questions-container');
+      
+      // Check for when the question exists, if it does - move to question container, if not - log an error
+      if (question) {
+        questionsContainer.innerHTML = `<p>${question.question}</p>`;
+      } 
+      else {
+        google.script.run.debugLog("A question was not found in the database. Something went wrong!", "ERROR")
+        questionsContainer.innerHTML = '<p>Error: Question not found.</p>';
+      }
+    }
+    
+    /**
+     ** Handles all interactions with the "Yes" and "No" buttons, with cases to handle various types of data (TODO: clean and refactor)
+     **/
+    function handleButtonClick(value) {
+      // Get the ID or IDs for the next question(s)
+      var nextQuestionId = currentQuestion[value];
+
+      // Case 1: nextQuestionId is an ARRAY of STRINGS
+      if (Array.isArray(nextQuestionId)) {
+        if (nextQuestionId.some(id => GRAPHICAST_MAP[id])) {
+          // Show loading indicator
+          document.getElementById('loading').style.display = 'block';
+
+          // Call the server-side function to copy the slide for each valid graphicast
+          nextQuestionId.forEach(id => {
+            if (GRAPHICAST_MAP[id]) {
+              google.script.run.withSuccessHandler(function() {
+                google.script.run.debugLog("Graphicast(s) found and copied for this scenario.", "SUCCESS")
+                // Hide loading indicator
+                document.getElementById('loading').style.display = 'none';
+                console.log('Graphicast(s) found and copied for this scenario.');
+                google.script.host.close(); 
+              }).copyRecommendedGraphicast(id, GRAPHICAST_MAP);
+            } 
+            else {
+              google.script.run.debugLog("No graphicast was found for the following scenario: " + id, "WARNING")
+              alert('WARNING: No graphicast was found for the following scenario: ' + id);
+            }
+          });
+        } 
+        else {
+          // Alert the user if none of the graphicasts are found in the map
+          google.script.run.debugLog("No graphicasts were found! Has the source presentation been moved?", "ERROR")
+          alert("ERROR: No graphicasts were found! Has the source presentation been moved?");
+          google.script.host.close();
+        }
+      } 
+
+      // Case 2: nextQuestionId is a STRING (IS THIS CASE NEEDED AS IS?)
+      else if (typeof nextQuestionId === 'string') {
+        if (GRAPHICAST_MAP[nextQuestionId]) {
+          // Show loading indicator
+          document.getElementById('loading').style.display = 'block';
+
+          // Call the server-side function to copy the slide
+          google.script.run.withSuccessHandler(function() {
+            // Hide loading indicator
+            document.getElementById('loading').style.display = 'none';
+            console.log(nextQuestionId);
+            google.script.host.close(); 
+          }).copyRecommendedGraphicast(nextQuestionId, GRAPHICAST_MAP);
+        } 
+        else {
+          // Alert the user if the graphicast is not found in the map
+          google.script.run.debugLog("No graphicasts were found! Has the source presentation been moved?", "ERROR")
+          alert("ERROR: No graphicasts were found! Has the source presentation been moved?");
+          google.script.host.close();
+        }
+      } 
+
+      // Case 3: nextQuestionId is a NUMBER
+      else if (typeof nextQuestionId === 'number') {
+        currentQuestionId = nextQuestionId;
+        currentQuestion = getQuestionById(currentQuestionId);
+        displayQuestion(currentQuestion);
+      } 
+      else {
+        // Handle unexpected value
+        google.script.run.debugLog("Something unexpected has occurred. Has the JSON database been moved?", "ERROR")
+        alert("ERROR: Something unexpected has occurred. Has the JSON database been moved?");
+        displayQuestion(null);
+      }
+    }
+
+    /**
+     ** Display the questions related to the decision tree according to the match, data passed in by the entry page form submission.
+     **/
+    window.onload = function() {
+      console.log("Loaded Questions:", questions); 
+      
+      // Load the questions onto the page by their ID
+      currentQuestion = getQuestionById(currentQuestionId);
+      displayQuestion(currentQuestion);
+    };
+  </script>
+</head>
+<!-- Query Page Section -->
+<body>
+  <h1>Query Page</h1>
+  <hr>
+  <div id="questions-container">
+    <label for="question">Question:</label>
+    <p>If you see this text, something went wrong.</p>
+  </div>
+  <hr>  
+  <div class="button-container">
+    <input type="button" value="Yes" class="button" onclick="handleButtonClick('yes')" />
+    <input type="button" value="No" class="button" onclick="handleButtonClick('no')" />
+  </div>
+  <div id="loading" class="loading">Loading, please wait...</div>
+</body>
+</html>
